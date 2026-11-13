@@ -10,6 +10,7 @@ import os
 import sys
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+JPEG_SIGNATURE = b"\xff\xd8\xff"
 
 DESTINATIONS = (
     ("/output/entry.png", True),
@@ -45,8 +46,8 @@ def main():
         sys.stderr.write("main.py: cannot read entry.png: %s\n" % (exc,))
         return 1
 
-    if not data.startswith(PNG_SIGNATURE):
-        sys.stderr.write("main.py: entry.png is missing the PNG signature, refusing to ship\n")
+    if not (data.startswith(PNG_SIGNATURE) or data.startswith(JPEG_SIGNATURE)):
+        sys.stderr.write("main.py: entry.png is neither PNG nor JPEG, refusing to ship\n")
         return 1
 
     written = write_entry(data)
